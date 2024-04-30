@@ -21,6 +21,7 @@ print(" ")
 print("**************************************************************************")
 print("********************** Start Forwording: ")
 print("**************************************************************************")
+
 async def main():
     async with app:
         try:
@@ -88,7 +89,7 @@ async def main():
                         file.close()
 
             await app.stop()
-            await os.remove("cache.txt")
+            os.remove("cache.txt")
         except FloodWait as e:
             await asyncio.sleep(e.value) 
 
