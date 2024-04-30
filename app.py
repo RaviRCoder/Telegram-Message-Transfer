@@ -8,10 +8,19 @@ import os
 from progressFun import print_progress
 
 app = Client("my_account")
-TARGET = -1002081762571
-chat_id=-1002131315760
+print("**************************************************************************")
+print("********************** Some Config: ")
+print("**************************************************************************")
+TARGET =int(input("Enter TARGET CHANNEL ID : "))
 
+print("")
 
+chat_id=int(input("Enter Worker ID : "))
+
+print(" ")
+print("**************************************************************************")
+print("********************** Start Forwording: ")
+print("**************************************************************************")
 async def main():
     async with app:
         try:
@@ -23,7 +32,6 @@ async def main():
             channel = await app.get_chat(TARGET) # geting channel info 
 
             print(f"Channel Name : {channel.title}")
-            print(f"Channel ID : {channel.id}")
             print(" ")
 
             mess=[ message async for message in app.get_chat_history(TARGET)] # storing message in list
@@ -33,10 +41,16 @@ async def main():
             lastid=int(open("cache.txt","r").read())
             
             for i,message in enumerate(reversed(mess)): # reverse the data 
-                # print_progress(i,MessageProgress)
+                print_progress(i,MessageProgress)
                 if lastid <=i:
                     if message.text!=None:
-                       await app.send_message(chat_id,text=message.text,entities=message.entities)
+                       if "/l" in message.text:
+                        text=message.text.replace("/l ","").split(' -n ')
+                        url=text[0]
+                        cap=text[1]
+                        await app.send_document(chat_id,document=url,caption=cap)
+                       else:
+                        await app.send_message(chat_id,text=message.text,entities=message.entities)
 
                     elif message.video!=None:
                         file_id=message.video.file_id
